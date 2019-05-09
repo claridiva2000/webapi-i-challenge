@@ -13,11 +13,9 @@ server.get('/api/users', (req, res) => {
       res.json(allUsers);
     })
     .catch(err => {
-      res
-        .status(500)
-        .json({
-          err: `{ error: "The users information could not be retrieved." }`
-        });
+      res.status(500).json({
+        err: `{ error: "The users information could not be retrieved." }`
+      });
     });
 });
 
@@ -33,11 +31,40 @@ server.post('/api/users', (req, res) => {
     });
 });
 
+server.delete('/api/users/:id', (req, res) => {
+  const { id } = req.params;
+  db.remove(id)
+    .then(removedUser => {
+      res.json(removedUser);
+    })
+    .catch(err => {
+      res.status(404).json({err: `{ message: "The user with the specified ID does not exist." }`});
+    });
+});
+
+
+server.put('/api/users/:id', (req, res) =>{
+  const { id } = req.params;
+  const changes = req.body;
+  db.update(id, changes)
+  .then(updatedUser =>{
+    if(updatedUser) {
+      res.json(updatedUser)
+    } else {
+      res.status(404).json({err: `{ message: "The user with the specified ID does not exist." }`})
+    }
+  })
+  .catch(err => {
+    res.status(404).json({err: `{ message: "The user with the specified ID does not exist." }`});
+  });
+})
+
+
 
 
 
 
 
 server.listen(8500, () => {
-  console.log('I have no idea what i\'m doing');
+  console.log("I have no idea what i'm doing");
 });
