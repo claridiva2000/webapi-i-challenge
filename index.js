@@ -6,7 +6,8 @@ const db = require('./data/db');
 require('dotenv').config();
 
 const server = require('./api/server.js');
-// const server = express();
+const server = express();
+
 server.use(express.json());
 
 //send back list of all users
