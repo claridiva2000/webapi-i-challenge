@@ -3,7 +3,10 @@ const express = require('express');
 
 const db = require('./data/db');
 
-const server = express();
+require('dotenv').config();
+
+const server = require('./api/server.js');
+// const server = express();
 server.use(express.json());
 
 //send back list of all users
@@ -18,6 +21,27 @@ server.get('/api/users', (req, res) => {
       });
     });
 });
+
+
+server.get('/api/users/:id', async (req, res) => {
+  try {
+    const user = await Users.findById(req.params.id);
+
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    // log error to database
+    console.log(error);
+    res.status(500).json({
+      message: 'Error retrieving the User',
+    });
+  }
+});
+
+
 
 server.post('/api/users', (req, res) => {
   const newUser = req.body;
@@ -62,9 +86,11 @@ server.put('/api/users/:id', (req, res) =>{
 
 
 
+const port = process.env.PORT || 5000;
 
-
-
-server.listen(8500, () => {
-  console.log("I have no idea what i'm doing");
+server.listen(port, () => {
+  console.log(`\n*** Server Running on http://localhost:${port} ***\n`);
 });
+
+
+
