@@ -1,16 +1,28 @@
 // implement your API here
 const express = require('express');
 
+const cors = require('cors');
+
 const db = require('./data/db');
 
 const server = express();
-server.use(express.json());
 
-//send back list of all users
+//middleware
+server.use(express.json()); //this is required or else your req.body won't come through making it impossible to do a post request.
+
+server.use(cors({origin: 'http://localhost:3000'}))
+
+server.get('/', (req, res) => {
+  res.send('Hello world');
+});
+
 server.get('/api/users', (req, res) => {
+  //specify data type
+  //set a status code
+  //send a response
   db.find()
     .then(allUsers => {
-      res.json(allUsers);
+      res.status(200).json(allUsers);
     })
     .catch(err => {
       res.status(500).json({
@@ -38,33 +50,38 @@ server.delete('/api/users/:id', (req, res) => {
       res.json(removedUser);
     })
     .catch(err => {
-      res.status(404).json({err: `{ message: "The user with the specified ID does not exist." }`});
+      res
+        .status(404)
+        .json({
+          err: `{ message: "The user with the specified ID does not exist." }`
+        });
     });
 });
 
-
-server.put('/api/users/:id', (req, res) =>{
+server.put('/api/users/:id', (req, res) => {
   const { id } = req.params;
   const changes = req.body;
   db.update(id, changes)
-  .then(updatedUser =>{
-    if(updatedUser) {
-      res.json(updatedUser)
-    } else {
-      res.status(404).json({err: `{ message: "The user with the specified ID does not exist." }`})
-    }
-  })
-  .catch(err => {
-    res.status(404).json({err: `{ message: "The user with the specified ID does not exist." }`});
-  });
-})
+    .then(updatedUser => {
+      if (updatedUser) {
+        res.json(updatedUser);
+      } else {
+        res
+          .status(404)
+          .json({
+            err: `{ message: "The user with the specified ID does not exist." }`
+          });
+      }
+    })
+    .catch(err => {
+      res
+        .status(404)
+        .json({
+          err: `{ message: "The user with the specified ID does not exist." }`
+        });
+    });
+  }); 
 
-
-
-
-
-
-
-server.listen(8500, () => {
+server.listen(8000, () => {
   console.log("I have no idea what i'm doing");
 });

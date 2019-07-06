@@ -4,7 +4,8 @@
   "description": "Express Demo",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon index.js"
+    "server": "nodemon index.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -21,9 +22,10 @@
     "nodemon": "^1.18.10"
   },
   "dependencies": {
-    "express": "^4.16.4",
-    "knex": "^0.16.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "knex": "^0.18.2",
     "node": "^12.1.0",
-    "sqlite3": "^4.0.6"
+    "sqlite3": "^4.0.9"
   }
 }
